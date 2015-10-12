@@ -10,7 +10,5 @@ public interface Subject {
 	
 	public void notifyObservers();
 	
-	public void getUpdate(Observer observer);
-	
-	
+	public String getMessage();
 }
