@@ -11,6 +11,7 @@
 		<module>designPatterns-factory</module>
 		<module>designPatterns-singleton</module>
 		<module>designPatterns-proxy</module>
+		<module>designPatterns-observer</module>
 	
 	</modules>
 	
