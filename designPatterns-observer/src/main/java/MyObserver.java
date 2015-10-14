@@ -1,6 +1,6 @@
 public class MyObserver implements Observer {
 
-	Subject subject;
+	private Subject subject;
 
 	// get the notify message from Concentrate Subject
 	@Override

@@ -42,7 +42,6 @@ public class ObserverTest {
 		reader2.subscribe("Linus");
 		reader3.subscribe("Linus");
 		writer.makeChanged("I have a new Changed");
-		
 		reader1.update();
 		
 		
