@@ -202,8 +202,154 @@ public class ObserverTest {
 以上就是观察者模式的小示例。可以看出每个**主题类**都要维护一个相应的**观察者列表**， 这里可以根据具体主题的抽象层次进一步抽象， **将这种聚集放到一个抽象类中去实现， 来共同维护一个列表**， 当然具体操作要看实际的业务逻辑。
 
 ##二、Servlet中的Listener
+再说**Servlet中的Listener**之前， 先说说观察者模式的另一种形态——**事件驱动模型**。与上面提到的观察者模式的主题角色一样， **事件驱动模型**包括**事件源， 具体事件， 监听器， 具体监听器**。
+**Servlet**中的**Listener**就是典型的**事件驱动模型**。
+JDK中有一套**事件驱动**的类， 包括一个**统一的监听器接口**和一个**统一的事件源**, 源码如下：
+
+```java
+/**
+ * A tagging interface that all event listener interfaces must extend.
+ * @since JDK1.1
+ */
+public interface EventListener {
+}
+```
+这是一个**标志接口**， JDK规定所有监听器必须**继承这个接口**。
+
+```java
+public class EventObject implements java.io.Serializable {
+
+    private static final long serialVersionUID = 5516075349620653480L;
+
+    /**
+     * The object on which the Event initially occurred.
+     */
+    protected transient Object  source;
+
+    /**
+     * Constructs a prototypical Event.
+     *
+     * @param    source    The object on which the Event initially occurred.
+     * @exception  IllegalArgumentException  if source is null.
+     */
+    public EventObject(Object source) {
+        if (source == null)
+            throw new IllegalArgumentException("null source");
+
+        this.source = source;
+    }
+
+    /**
+     * The object on which the Event initially occurred.
+     *
+     * @return   The object on which the Event initially occurred.
+     */
+    public Object getSource() {
+        return source;
+    }
+
+    /**
+     * Returns a String representation of this EventObject.
+     *
+     * @return  A a String representation of this EventObject.
+     */
+    public String toString() {
+        return getClass().getName() + "[source=" + source + "]";
+    }
+}
+```
+**EvenObject**是JDK给我们规定的一个统一的**事件源**。**EvenObject**类中定义了一个事件源以及获取事件源的`get`方法。
+
+下面就分析一下**Servlet Listener**的运行流程。
+
+###1、Servlet Listener的组成
+目前， Servlet中存在**6种两类事件**的监听器接口， 具体如下图：
+![ServletListener.png-127kB][3]
+具体触发情境如下表：
+![ServletListener _2.png-312.2kB][4]
+
+###2、一个具体的Listener触发过程
+我们以**ServletRequestAttributeListener**为例， 来分析一下此处**事件驱动**的流程。
+
+首先一个**Servlet**中， **HttpServletRequest**调用`setAttrilbute`方法时， 实际上是调用的`org.apache.catalina.connector.request#setAttrilbute`方法。 我们看下它的源码：
+```java
+public void setAttribute(String name, Object value) {
+        ...
+        //上面的逻辑代码已省略
+        
+        // 此处即通知监听者
+        notifyAttributeAssigned(name, value, oldValue);
+    }
+```
+下面是`notifyAttributeAssigned(String name, Object value, Object oldValue)`的源码
+```java
+private void notifyAttributeAssigned(String name, Object value,
+            Object oldValue) {
+            
+        //从容器中获取webAPP中定义的Listener的实例对象
+        Object listeners[] = context.getApplicationEventListeners();
+        if ((listeners == null) || (listeners.length == 0)) {
+            return;
+        }
+        boolean replaced = (oldValue != null);
+        //创建相关事件对象
+        ServletRequestAttributeEvent event = null;
+        if (replaced) {
+            event = new ServletRequestAttributeEvent(
+                    context.getServletContext(), getRequest(), name, oldValue);
+        } else {
+            event = new ServletRequestAttributeEvent(
+                    context.getServletContext(), getRequest(), name, value);
+        }
+        //遍历所有监听器列表， 找到对应事件的监听器
+        for (int i = 0; i < listeners.length; i++) {
+            if (!(listeners[i] instanceof ServletRequestAttributeListener)) {
+                continue;
+            }
+            //调用监听器的方法， 实现监听操作
+            ServletRequestAttributeListener listener =
+                (ServletRequestAttributeListener) listeners[i];
+            try {
+                if (replaced) {
+                    listener.attributeReplaced(event);
+                } else {
+                    listener.attributeAdded(event);
+                }
+            } catch (Throwable t) {
+                ExceptionUtils.handleThrowable(t);
+                context.getLogger().error(sm.getString("coyoteRequest.attributeEvent"), t);
+                // Error valve will pick this exception up and display it to user
+                attributes.put(RequestDispatcher.ERROR_EXCEPTION, t);
+            }
+        }
+    }
+```
+
+上面的例子很清楚的看出`ServletRequestAttributeListener`是如何调用的。用户只需要实现**监听器接口**就行。Servlet中的**Listener**几乎涵盖了Servlet整个**生命周期**中你感兴趣的事件， 灵活运用这些**Listenser**可以使程序更加灵活。
+
+
+##三、总结
+- 观察者模式定义了对象之间**一对多的关系**， 当一个对象（被观察者）的状态改变时， 依赖它的对象都会收到通知。可以应用到**发布——订阅， 变化——更新**这种业务场景中。
+
+- 观察者和被观察者之间用**松耦合的方式**， 被观察者不知道观察者的细节， 只知道观察者实现了接口。
+
+- 事件驱动模型更加灵活，但也是付出了系统的复杂性作为代价的，因为我们要为每一个事件源定制一个监听器以及事件，这会增加系统的负担。
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
   [1]: http://dl2.iteye.com/upload/attachment/0088/1629/dedf4ef1-8b8a-3237-a944-5a14d44f950d.png
   [2]: http://static.zybuluo.com/pastqing/ganajqc87702g6zf3z5nfwx5/Observer.png
+  [3]: http://static.zybuluo.com/pastqing/y6ow96k2nd19uv2jbm1ebqar/ServletListener.png
+  [4]: http://static.zybuluo.com/pastqing/i44w82y3kfdk22ascfhmfdue/ServletListener%20_2.png
