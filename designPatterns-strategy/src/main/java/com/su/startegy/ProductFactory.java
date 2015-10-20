@@ -24,7 +24,7 @@ public class ProductFactory {
 		static final ProductFactory instance = new ProductFactory();
 	}
 
-	public IProduct createProduct(String productType) {
+	public IProduct createProduct(String productType) throws URISyntaxException {
 
 		// load all startegys
 		List<Class<? extends IProduct>> startegyList = loadAllStrategy("com.su.startegy");
@@ -44,9 +44,9 @@ public class ProductFactory {
 		return null;
 	}
 
-	private List<Class<? extends IProduct>> loadAllStrategy(String packageName) {
+	private List<Class<? extends IProduct>> loadAllStrategy(String packageName) throws URISyntaxException {
 		List<Class<? extends IProduct>> strategyList = new ArrayList<Class<? extends IProduct>>();
-		String filePath = getClass().getClassLoader().getResource(packageName.replace(".", "/")).toString();
+		URI filePath = getClass().getClassLoader().getResource(packageName.replace(".", "/")).toURI();
 		System.out.println(filePath);
 		File[] files = new File(filePath).listFiles(new FilenameFilter() {
 			@Override
@@ -56,12 +56,12 @@ public class ProductFactory {
 				return false;
 			}
 		});
-		System.out.println("file length: " + files.length);
 		// load class
+		
 		for (File file : files) {
 			try {
 				Class clazz = getClass().getClassLoader().loadClass(
-						packageName + "." + file.getName());
+						packageName + "." + file.getName().replace(".class", ""));
 				if (clazz != IProduct.class
 						&& IProduct.class.isAssignableFrom(clazz)) {
 					strategyList.add(clazz);
@@ -84,13 +84,8 @@ public class ProductFactory {
 
 	public static void main(String[] args) throws URISyntaxException,
 			ClassNotFoundException {
-//		IProduct product = ProductFactory.getInstance().createProduct("ChinaMobile");
-//		System.out.println(product.getClass().getName());
-		URI filePath = ProductFactory.class.getClassLoader().getResource("com.su.startegy".replace(".", "/")).toURI();
-		System.out.println(filePath.getPath());
-		File file  = new File("/Users/yadoao/Documents/workspace/designPatterns/designPatterns-strategy/target/classes/com/su/startegy");
-		String[] files = file.list();
-		System.out.println(files.length);
+		IProduct product = ProductFactory.getInstance().createProduct("ChinaMobile");
+		System.out.println(product.getClass().getName());
 	}
 
 }
