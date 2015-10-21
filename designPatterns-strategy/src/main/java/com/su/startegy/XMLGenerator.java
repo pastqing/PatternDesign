@@ -23,6 +23,4 @@ public class XMLGenerator {
 		}
 		return product.generateXML();
 	}
-
-	
 }
