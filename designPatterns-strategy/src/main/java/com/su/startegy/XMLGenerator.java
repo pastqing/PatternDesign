@@ -1,32 +1,28 @@
 package com.su.startegy;
 
+import java.net.URISyntaxException;
+
 import com.su.annotation.XMLType;
 
 /**
  * A XML Factory, AND A Annotation Handler
+ * 
  * @author su
  *
  */
 public class XMLGenerator {
 
 	private IProduct product = new DefaultHead();
-	//singleton
-	private XMLGenerator() {
-		
-	}
-	
-	public static XMLGenerator getInstance() {
-		return XMLGeneratorInstance.instance;
-	}
-	
-	private static class XMLGeneratorInstance {
-		static final XMLGenerator instance = new XMLGenerator();
-	}
-	
+
 	public String generate(String type) {
-		
+		try {
+			product = ProductFactory.getInstance().createProduct(type);
+
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
 		return product.generateXML();
 	}
+
+	
 }
-
-

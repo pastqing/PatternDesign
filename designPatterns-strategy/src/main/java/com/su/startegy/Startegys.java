@@ -21,14 +21,14 @@ class ChinaMobile implements IProduct{
 		return "China Mobile XML";
 	}
 }
-
+@XMLType("ChinaUnicom")
 class ChinaUnicom implements IProduct {
 	
 	public String generateXML() {
 		return "Chinal Unicom XML";
 	}
 }
-
+@XMLType("ChinaTele")
 class ChinaTele implements IProduct {
 	
 	public String generateXML() {

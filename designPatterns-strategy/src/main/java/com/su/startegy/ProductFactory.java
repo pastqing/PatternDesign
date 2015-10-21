@@ -56,8 +56,8 @@ public class ProductFactory {
 				return false;
 			}
 		});
-		// load class
 		
+		// load class
 		for (File file : files) {
 			try {
 				Class clazz = getClass().getClassLoader().loadClass(
@@ -87,5 +87,4 @@ public class ProductFactory {
 		IProduct product = ProductFactory.getInstance().createProduct("ChinaMobile");
 		System.out.println(product.getClass().getName());
 	}
-
 }

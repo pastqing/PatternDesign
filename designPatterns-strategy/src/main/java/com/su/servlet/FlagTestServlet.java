@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.su.annotation.RequestFlagVaild;
 import com.su.startegy.XMLGenerator;
 
 /**
@@ -31,9 +30,6 @@ public class FlagTestServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String flag = request.getParameter("flag");	
-		
-		
-		XMLGenerator.getInstance().generator(@RequestFlagValid(flag)"");
 	}
 
 	
