@@ -4,10 +4,9 @@ import com.su.annotation.XMLType;
 
 
 public class Startegys {
-	
-	
 
 }
+
 @XMLType("Default")
 class DefaultHead implements IProduct {
 	public String generateXML() {

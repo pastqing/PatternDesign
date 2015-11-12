@@ -1,15 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ClassDiagram>
-    <Class name="com.su.startegy.Strategy" x="117" y="34">
+    <Class name="basic.ConcreteComponent" x="324" y="42">
         <AttributesDisplayFilter public-accepted="true"
             private-accepted="true" protected-accepted="true"
             default-accepted="true" static-accepted="false"/>
         <MethodDisplayFilter public-accepted="true"
             private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Extension destinationClassName="basic.Component"/>
+    </Class>
+    <Class name="basic.Component" x="34" y="34">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="true"
             default-accepted="false" static-accepted="false"
             accessors-accepted="false" constructors-accepted="false"/>
     </Class>
-    <Class name="com.su.startegy.Situation" x="392" y="37">
+    <Class name="basic.ConcreteDecoratorA" x="166" y="248">
         <AttributesDisplayFilter public-accepted="true"
             private-accepted="true" protected-accepted="true"
             default-accepted="true" static-accepted="false"/>
@@ -17,11 +27,9 @@
             private-accepted="false" protected-accepted="false"
             default-accepted="false" static-accepted="false"
             accessors-accepted="false" constructors-accepted="false"/>
-        <Association destinationClassName="com.su.startegy.Strategy"
-            endpointName="strategy" kind="Simple"/>
-        <Communication destinationClassName="com.su.startegy.Strategy"/>
+        <Extension destinationClassName="basic.Decorator"/>
     </Class>
-    <Class name="com.su.startegy.ConcentrateStrategy_1" x="29" y="161">
+    <Class name="basic.Decorator" x="268" y="145">
         <AttributesDisplayFilter public-accepted="true"
             private-accepted="true" protected-accepted="true"
             default-accepted="true" static-accepted="false"/>
@@ -29,9 +37,14 @@
             private-accepted="false" protected-accepted="false"
             default-accepted="false" static-accepted="false"
             accessors-accepted="false" constructors-accepted="false"/>
-        <Extension destinationClassName="com.su.startegy.Strategy"/>
+        <Extension destinationClassName="basic.Component"/>
+        <Association destinationClassName="basic.Component"
+            endpointName="component" kind="Simple">
+            <Point x="79" y="168"/>
+        </Association>
+        <Communication destinationClassName="basic.Component"/>
     </Class>
-    <Class name="com.su.startegy.ConcentrateStrategy_2" x="208" y="166">
+    <Class name="basic.ConcreteDecoratorB" x="339" y="247">
         <AttributesDisplayFilter public-accepted="true"
             private-accepted="true" protected-accepted="true"
             default-accepted="true" static-accepted="false"/>
@@ -39,6 +52,6 @@
             private-accepted="false" protected-accepted="false"
             default-accepted="false" static-accepted="false"
             accessors-accepted="false" constructors-accepted="false"/>
-        <Extension destinationClassName="com.su.startegy.Strategy"/>
+        <Extension destinationClassName="basic.Decorator"/>
     </Class>
 </ClassDiagram>

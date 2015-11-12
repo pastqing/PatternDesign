@@ -12,10 +12,7 @@ import com.su.annotation.XMLType;
 public class ProductFactory {
 
 	// singleton
-	private ProductFactory() {
-
-	}
-
+	private ProductFactory() {}
 	public static ProductFactory getInstance() {
 		return ProductFactoryInstance.instance;
 	}

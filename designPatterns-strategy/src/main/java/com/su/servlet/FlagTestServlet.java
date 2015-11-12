@@ -1,5 +1,7 @@
 package com.su.servlet;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
@@ -29,7 +31,17 @@ public class FlagTestServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String flag = request.getParameter("flag");	
+		String flag = "Hello";	
+		System.out.println();
+		String path = Thread.currentThread().getContextClassLoader().getResource("/").getPath();
+		
+		File file = new File(path + "/text.txt");
+		if(!file.exists()) {
+			file.createNewFile();
+		}
+		FileOutputStream fos = new FileOutputStream(file);
+		fos.write(flag.toString().getBytes("UTF-8"));
+		fos.close();
 	}
 
 	

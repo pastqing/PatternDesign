@@ -13,7 +13,7 @@
 		<module>designPatterns-proxy</module>
 		<module>designPatterns-observer</module>
 		<module>designPatterns-strategy</module>
-	
+		<module>designPatterns-decorator</module>
 	</modules>
 	
 	<name>designPattern</name>
